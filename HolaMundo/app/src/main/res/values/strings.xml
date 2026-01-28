@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Hola Mundo</string>
+    <string-array name="miDesplegable">
+        <item>Python</item>
+        <item>Java</item>
+        <item>SQL</item>
+    </string-array>
+</resources>
