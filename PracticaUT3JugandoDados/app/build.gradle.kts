@@ -39,11 +39,18 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.28" )
+    implementation("com.google.android.material:material:1.11.0")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.coordinatorlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
 }

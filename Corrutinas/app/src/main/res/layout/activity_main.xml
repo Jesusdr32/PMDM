@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <ProgressBar
+        android:id="@+id/pb1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="62dp" />
+
+    <Button
+        android:id="@+id/btnSinHilos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Boton sin Hilos" />
+
+    <Button
+        android:id="@+id/btnHola"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Boton Hola" />
+
+    <Button
+        android:id="@+id/btnConHilos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Boton con Hilos" />
+
+    <TextView
+        android:id="@+id/tvTexto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/btnCancelar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancelar" />
+</LinearLayout>

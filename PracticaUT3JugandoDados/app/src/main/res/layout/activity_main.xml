@@ -5,39 +5,42 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/txtSaldo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Saldo: "
+        style="@style/TituloSaldo"
+        android:text="Saldo:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.113"
+        app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintVertical_bias="0.061" />
 
     <TextView
         android:id="@+id/txtSaldo2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="100 €"
+        style="@style/TituloSaldo"
+        android:textColor="@color/secondaryColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.781"
+        app:layout_constraintHorizontal_bias="0.684"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintVertical_bias="0.061" />
 
     <EditText
         android:id="@+id/eTxtApuesta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text"
-        android:text="Haga su apuesta"
+        android:hint="Haga su apuesta"
+        android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -46,7 +49,7 @@
         app:layout_constraintVertical_bias="0.408" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggleButton"
+        android:id="@+id/btnGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -55,25 +58,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.13"
+        app:singleSelection="true"
         tools:ignore="MissingConstraints">
 
-        <Button
-            android:id="@+id/button1"
-            style="?attr/materialButtonOutlinedStyle"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnParImpar"
+            style="@style/BotonSecundario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Par/Impar" />
+            android:text="Par / Impar" />
 
-        <Button
-            android:id="@+id/button2"
-            style="?attr/materialButtonOutlinedStyle"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMayorMenor"
+            style="@style/BotonSecundario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mayor/Menor que 7" />
+            android:text="Mayor o Igual/Menor que 7" />
+
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -83,16 +88,66 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.233" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLanzar"
+        style="@style/BotonPrincipal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lanzo los dados"
+        android:text="🎲 Lanzar los dados"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
+
+
+    <ImageView
+        android:id="@+id/imgDados"
+        android:layout_width="270dp"
+        android:layout_height="244dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.858" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/myCoordinator"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <TextView
+        android:id="@+id/txtDado1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.88" />
+
+    <TextView
+        android:id="@+id/txtDado2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.88" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
