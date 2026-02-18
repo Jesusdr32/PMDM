@@ -17,7 +17,7 @@ class CicloVidaModel {
             misDatos.mostrarToast = true
         }
 
-        return misDatos no tengo datos
+        return misDatos
     }
 
     public suspend fun restar(num : Int) : Datos {

@@ -1,30 +1,63 @@
 package com.example.mvvmcalculadorav2.model
 
-import kotlinx.coroutines.delay
+import com.example.mvvmcalculadorav2.model.Dato
 
 class CalculadoraModel {
 
-    var miDato = Dato("ok", 0, 0, 0)
+    var dato = Dato("", "", "", "", false)
 
-    public suspend fun sumar(num1 : Int, num2 : Int) : Dato {
-        delay(2000)
-        miDato.num1 = num1
-        miDato.num2 = num2
-        miDato.res = miDato.num1 + miDato.num2
-
-        return miDato
+    fun inputNumber(number : String) {
+        if (dato.res) clearAll()
+        dato.num += number
     }
 
-    public suspend fun restar(num1 : Int, num2 : Int) : Dato {
-        delay(2000)
-        miDato.num1 = num1
-        miDato.num2 = num2
-        miDato.res = miDato.num1 - miDato.num2
+    fun setOperation(op : String) : String? {
+        if (dato.num.isEmpty()) return "Debes ingresar un número primero"
 
-        return miDato
+        dato.acumulado = dato.num
+        dato.operador = op
+        dato.estado = "${dato.acumulado} $op"
+        dato.num = ""
+        return null
     }
 
-    public suspend fun multiplicar(num1 : Int, num2 : Int) : Dato {
-        soy rarillo
+    fun calculate() : Dato {
+        if (dato.num.isEmpty() || dato.operador.isEmpty() || dato.acumulado.isEmpty()) {
+            dato.estado = "error: incompleto"
+            return dato
+        }
+
+        val num1 = dato.acumulado.toDouble()
+        val num2 = dato.num.toDouble()
+        val operador = dato.operador
+
+        val resultado = when (operador) {
+                "+" -> (num1 + num2).toString()
+                "-" -> (num1 -num2).toString()
+                "*" -> (num1 * num2).toString()
+                "/" -> {
+                    if (num2 == 0.0) {
+                        dato.estado = "error: división por cero"
+                        return dato
+                    }
+                    (num1 / num2).toString()
+                }
+            else -> {
+                dato.estado = "error: operador desconocido"
+                return dato
+            }
+        }
+
+        dato.estado = "$num1 $operador $num2 ="
+        dato.num = resultado
+        dato.acumulado = ""
+        dato.operador = ""
+        dato.res = true
+
+        return dato
+    }
+
+    fun clearAll() {
+        dato = Dato("", "", "", "", false)
     }
 }

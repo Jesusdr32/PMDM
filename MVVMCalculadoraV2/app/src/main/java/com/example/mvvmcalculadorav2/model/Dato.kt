@@ -1,3 +1,3 @@
 package com.example.mvvmcalculadorav2.model
 
-data class Dato(var estado : String, var num1 : Int, var num2 : Int, var res : Int)
+data class Dato(var estado : String, var acumulado : String, var num : String, var operador : String, var res : Boolean = false)

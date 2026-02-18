@@ -1,29 +1,47 @@
 package com.example.mvvmcalculadorav2
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.mvvmcalculadorav2.databinding.ActivityMainBinding
+import com.example.mvvmcalculadorav2.viewmodel.CalculadoraViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
-
-    private val miViewModel : CalculadoraViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
+    private val miViewModel: CalculadoraViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContentView(binding.root)
+
+        miViewModel.datoObservable.observe(this) {
+            binding.txtResultado.text = if (it.num.isEmpty()) "0.0" else it.num
+            binding.txtOperacion.text = it.estado
         }
+
+        miViewModel.error.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
+
+        val botones = listOf(binding.btn0, binding.btn1, binding.btn2, binding.btn3, binding.btn4, binding.btn5, binding.btn6, binding.btn7, binding.btn8, binding.btn9)
+        botones.forEach { btn ->
+            btn.setOnClickListener { miViewModel.onNumberClick(btn.text.toString()) }
+        }
+
+        binding.btnSuma.setOnClickListener { miViewModel.onOperationClick("+") }
+        binding.btnResta.setOnClickListener { miViewModel.onOperationClick("-") }
+        binding.btnMulti.setOnClickListener { miViewModel.onOperationClick("*") }
+        binding.btnDivi.setOnClickListener { miViewModel.onOperationClick("/") }
+
+        binding.btnIgual.setOnClickListener { miViewModel.onEqualsClick() }
+        binding.btnClear.setOnClickListener { miViewModel.onClearClick() }
     }
 }
