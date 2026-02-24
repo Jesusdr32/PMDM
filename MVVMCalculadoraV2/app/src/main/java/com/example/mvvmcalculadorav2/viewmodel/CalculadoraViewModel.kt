@@ -1,38 +1,36 @@
 package com.example.mvvmcalculadorav2.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmcalculadorav2.model.CalculadoraModel
 import com.example.mvvmcalculadorav2.model.Dato
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class CalculadoraViewModel : ViewModel() {
 
     private val model = CalculadoraModel()
 
-    private val _dato = MutableLiveData<Dato>(model.dato)
-    val datoObservable : LiveData<Dato> get() = _dato
+    private var _dato = MutableStateFlow<Dato>(Dato("", "", "", "", false, ""))
+    val datoObservable : StateFlow<Dato> get() = _dato
 
-    private val _error = MutableLiveData<String>()
-    val error : LiveData<String> get() = _error
+    private var _error = MutableStateFlow<String>("")
+    val error : StateFlow<String> get() = _error
 
     fun onNumberClick(number : String) {
         viewModelScope.launch {
-            model.inputNumber(number)
-            _dato.value = model.dato
+            _dato.value = model.inputNumber(number)
         }
     }
 
     fun onOperationClick(op : String) {
         viewModelScope.launch {
-            val msg = model.setOperation(op)
-            if (msg != null) {
-                _error.value = msg
-            } else {
-                _dato.value = model.dato
-            }
+           _dato.value = model.setOperation(op)
         }
     }
 

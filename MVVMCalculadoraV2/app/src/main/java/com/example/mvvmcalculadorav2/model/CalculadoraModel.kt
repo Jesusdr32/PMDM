@@ -4,21 +4,22 @@ import com.example.mvvmcalculadorav2.model.Dato
 
 class CalculadoraModel {
 
-    var dato = Dato("", "", "", "", false)
+    var dato = Dato("", "", "", "", false, "")
 
-    fun inputNumber(number : String) {
+    fun inputNumber(number : String) : Dato {
         if (dato.res) clearAll()
         dato.num += number
+        return Dato(dato.estado, dato.acumulado, dato.num, dato.operador, dato.res, "")
     }
 
-    fun setOperation(op : String) : String? {
-        if (dato.num.isEmpty()) return "Debes ingresar un número primero"
+    fun setOperation(op : String) : Dato {
+        if (dato.num.isEmpty()) return Dato(dato.estado, dato.acumulado, dato.num, dato.operador, dato.res, "Debes ingresar un número primero")
 
         dato.acumulado = dato.num
         dato.operador = op
         dato.estado = "${dato.acumulado} $op"
         dato.num = ""
-        return null
+        return Dato(dato.estado, dato.acumulado, dato.num, dato.operador, dato.res, "")
     }
 
     fun calculate() : Dato {
@@ -58,6 +59,6 @@ class CalculadoraModel {
     }
 
     fun clearAll() {
-        dato = Dato("", "", "", "", false)
+        dato = Dato("", "", "", "", false, "")
     }
 }

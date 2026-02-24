@@ -1,11 +1,14 @@
 package com.example.mvvmcalculadorav2
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.mvvmcalculadorav2.databinding.ActivityMainBinding
 import com.example.mvvmcalculadorav2.viewmodel.CalculadoraViewModel
 import kotlinx.coroutines.flow.collect
@@ -22,14 +25,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        miViewModel.datoObservable.observe(this) {
+        /**miViewModel.datoObservable.observe(this) {
             binding.txtResultado.text = if (it.num.isEmpty()) "0.0" else it.num
             binding.txtOperacion.text = it.estado
         }
 
         miViewModel.error.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        }
+        }**/
 
         val botones = listOf(binding.btn0, binding.btn1, binding.btn2, binding.btn3, binding.btn4, binding.btn5, binding.btn6, binding.btn7, binding.btn8, binding.btn9)
         botones.forEach { btn ->
@@ -43,5 +46,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnIgual.setOnClickListener { miViewModel.onEqualsClick() }
         binding.btnClear.setOnClickListener { miViewModel.onClearClick() }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                miViewModel.datoObservable.collect {
+                    if (it.error.isNotBlank()) {
+                        Toast.makeText(this@MainActivity, it.error, Toast.LENGTH_SHORT).show()
+                    }
+                    binding.txtResultado.text = if (it.num.isEmpty()) "0.0" else it.num
+                    binding.txtOperacion.text = it.estado
+                }
+            }
+        }
     }
 }
