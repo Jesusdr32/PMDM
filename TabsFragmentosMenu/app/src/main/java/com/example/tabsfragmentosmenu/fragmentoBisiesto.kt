@@ -5,6 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import com.example.tabsfragmentosmenu.viewmodel.FragmentViewModel
+import androidx.fragment.app.viewModels
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,7 +24,14 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class fragmentoBisiesto : Fragment() {
-    // TODO: Rename and change types of parameters
+    private lateinit var rg : RadioGroup
+    private lateinit var rbSi : RadioButton
+    private lateinit var rbNo : RadioButton
+    private lateinit var btnValidarBisiesto : Button
+    private lateinit var tvEstadoBisiesto : TextView
+    private lateinit var miVista : View
+
+    private val miViewModel : FragmentViewModel by viewModels()
     private var param1: String? = null
     private var param2: String? = null
 
@@ -34,7 +48,8 @@ class fragmentoBisiesto : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragmento_bisiesto, container, false)
+        miVista =  inflater.inflate(R.layout.fragment_fragmento_bisiesto, container, false)
+        return miVista;
     }
 
     companion object {
