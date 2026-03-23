@@ -9,66 +9,80 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import com.example.tabsfragmentosmenu.viewmodel.FragmentViewModel
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.example.tabsfragmentosmenu.viewmodel.MainViewModel
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [fragmentoBisiesto.newInstance] factory method to
- * create an instance of this fragment.
- */
 class fragmentoBisiesto : Fragment() {
-    private lateinit var rg : RadioGroup
-    private lateinit var rbSi : RadioButton
-    private lateinit var rbNo : RadioButton
-    private lateinit var btnValidarBisiesto : Button
-    private lateinit var tvEstadoBisiesto : TextView
-    private lateinit var miVista : View
 
-    private val miViewModel : FragmentViewModel by viewModels()
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var rg: RadioGroup
+    private lateinit var rbSi: RadioButton
+    private lateinit var rbNo: RadioButton
+    private lateinit var btnValidar: Button
+    private lateinit var tvResultado: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val miViewModel: MainViewModel by viewModels({requireActivity()})
+    private var respuestaSeleccionada : Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        miVista =  inflater.inflate(R.layout.fragment_fragmento_bisiesto, container, false)
-        return miVista;
+    ): View {
+        val view =  inflater.inflate(R.layout.fragment_fragmento_bisiesto, container, false)
+        rg = view.findViewById(R.id.rg)
+        rbSi = view.findViewById(R.id.rbSi)
+        rbNo = view.findViewById(R.id.rbNo)
+        btnValidar = view.findViewById(R.id.btnValidarBisiesto)
+        tvResultado = view.findViewById(R.id.tvEstadoBisiesto)
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment fragmentoBisiesto.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            fragmentoBisiesto().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        miViewModel.datos.observe(viewLifecycleOwner, Observer { data ->
+            val num = data.numGenerado
+            if (num != 0) {
+                when (data.estado) {
+                    1 -> {
+                        tvResultado.text = "Pendiente"
+                        tvResultado.setTextColor(resources.getColor(android.R.color.holo_blue_bright, null))
+                    }
+
+                    0 -> {
+                        tvResultado.text = "Correcto"
+                        tvResultado.setTextColor(resources.getColor(android.R.color.holo_green_light, null))
+                    }
+
+                    -1 -> {
+                        tvResultado.text = "Incorrecto"
+                        tvResultado.setTextColor(resources.getColor(android.R.color.holo_red_light, null))
+                    }
+
+                    else -> tvResultado.text = ""
                 }
             }
+        })
+
+        rg.setOnCheckedChangeListener { _, checkedId ->
+            respuestaSeleccionada = when (checkedId) {
+                R.id.rbSi -> true
+                R.id.rbNo -> false
+                else -> null
+            }
+        }
+
+        btnValidar.setOnClickListener {
+            val num = miViewModel.datos.value?.numGenerado ?: return@setOnClickListener
+            if (respuestaSeleccionada == null) {
+                Toast.makeText(requireContext(), "Selecciona una opción", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            val esBisiesto = (num % 4 == 0 && (num % 100 != 0 || num % 400 == 0))
+            val correcto = respuestaSeleccionada == esBisiesto
+
+            miViewModel.setEstado(correcto)
+        }
     }
 }
