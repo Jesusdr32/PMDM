@@ -12,21 +12,22 @@ class ListaPerrosViewModel: ViewModel() {
     private val _listaRazas = MutableStateFlow<List<String>>(emptyList())
     val listaRazas: StateFlow<List<String>> get() = _listaRazas
 
-    fun listaRazas() {
+    private val _detallePerro = MutableStateFlow<DogRespuesta?>(null)
+    val detallePerro: StateFlow<DogRespuesta?> get() = _detallePerro
+
+    fun cargarRazas() {
         viewModelScope.launch {
             _listaRazas.value = myState.listaRazasPerros()
         }
     }
 
     init {
-        listaRazas()
+        cargarRazas()
     }
-    private val _detallePerro = MutableStateFlow<>()
-    val detallePerro: StateFlow<> get() = _detallePerro
 
-    fun detallePerro(raza: String) {
+    fun cargarDetallePerro(raza: String) {
         viewModelScope.launch {
-            _detallePerro.value = myState
+            _detallePerro.value = myState.recuperarFotos(raza)
         }
     }
 }
