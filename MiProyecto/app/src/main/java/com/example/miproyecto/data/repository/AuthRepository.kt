@@ -1,9 +1,8 @@
 package com.example.miproyecto.data.repository
 
 import com.example.miproyecto.data.api.RetrofitClient
-import com.example.miproyecto.data.model.LoginRequest
+import com.example.miproyecto.data.dto.LoginRequestDto
 
 class AuthRepository {
-    suspend fun login(email: String, password: String) =
-        RetrofitClient.apiService.login(LoginRequest(email, password))
+    suspend fun login(dto: LoginRequestDto) = RetrofitClient.api.login(dto)
 }

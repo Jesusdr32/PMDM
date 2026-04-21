@@ -4,10 +4,9 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.miproyecto.ui.main.MainActivity
-import com.example.miproyecto.utils.SessionManager
+import com.example.miproyecto.domain.SessionManager
 
-class LoginActivity: AppCompatActivity() {
+class LoginScreen: AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
@@ -30,7 +29,7 @@ class LoginActivity: AppCompatActivity() {
             sessionManager.saveToken("Bearer ${it.token}")
             sessionManager.saveUsername(it.username)
 
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, MainScreen::class.java))
             finish()
         }
 

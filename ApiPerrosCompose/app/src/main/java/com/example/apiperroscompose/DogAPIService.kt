@@ -5,9 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface DogAPIService {
-    @GET("/list/all")
+    @GET("breeds/list/all")
     suspend fun getRazasPerros(): Response<RazasResponse>
 
-    @GET("{raza}/images")
+    @GET("{breed/raza}/images")
     suspend fun getFotosPerros(@Path("raza") raza: String): Response<DogRespuesta>
 }

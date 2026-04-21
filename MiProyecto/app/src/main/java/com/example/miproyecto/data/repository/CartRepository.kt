@@ -1,15 +1,12 @@
 package com.example.miproyecto.data.repository
 
 import com.example.miproyecto.data.api.RetrofitClient
-import com.example.miproyecto.data.model.AddCartRequest
+import com.example.miproyecto.data.dto.AddProductToCartDto
 
 class CartRepository {
-    suspend fun getCart(token: String) =
-        RetrofitClient.apiService.getCart(token)
+    suspend fun getCart() = RetrofitClient.api.getCart()
 
-    suspend fun addToCart(token: String, productId: Int, quantity: Int) =
-        RetrofitClient.apiService.addToCart(token, AddCartRequest(productId, quantity))
+    suspend fun add(dto: AddProductToCartDto) = RetrofitClient.api.addToCart(dto)
 
-    suspend fun removeFromCart(token: String, id: Long) =
-        RetrofitClient.apiService.removeFromCart(token, id)
+    suspend fun delete(id: Long) = RetrofitClient.api.removeFromCart(id)
 }

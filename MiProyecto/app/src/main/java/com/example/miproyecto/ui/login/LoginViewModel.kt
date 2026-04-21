@@ -1,30 +1,31 @@
 package com.example.miproyecto.ui.login
 
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.miproyecto.data.model.LoginResponse
+import com.example.miproyecto.data.dto.LoginRequestDto
 import com.example.miproyecto.data.repository.AuthRepository
+import com.example.miproyecto.domain.SessionManager
 import kotlinx.coroutines.launch
 
 class LoginViewModel: ViewModel() {
-    private val repository = AuthRepository()
+    var username by mutableStateOf("")
+    var password by mutableStateOf("")
 
-    val loginResult = MutableLiveData<LoginResponse>()
-    val error = MutableLiveData<String>()
+    private val repo = AuthRepository()
 
-    fun login(email: String, password: String) {
+    fun login(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            try {
-                val response = repository.login(email, password)
-                if (response.isSuccessful && response.body() != null) {
-                    loginResult.postValue(response.body())
-                } else {
-                    error.postValue("Usuario o contraseña incorrectos")
-                }
-            } catch (e: Exception) {
-                error.postValue(e.message)
-            }
+            val response = repo.login(
+                LoginRequestDto(username, password)
+            )
+
+            SessionManager.token = response.accessToken
+            SessionManager.username = username
+
+            onSuccess()
         }
     }
 }

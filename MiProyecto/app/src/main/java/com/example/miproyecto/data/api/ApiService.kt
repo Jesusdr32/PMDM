@@ -1,44 +1,50 @@
 package com.example.miproyecto.data.api
 
-import com.example.miproyecto.data.model.CartItem
-import com.example.miproyecto.data.model.GenericResponse
-import com.example.miproyecto.data.model.LoginRequest
-import com.example.miproyecto.data.model.LoginResponse
-import com.example.miproyecto.data.model.Product
-import com.google.gson.stream.JsonToken
-import okhttp3.Response
+import com.example.miproyecto.data.dto.AddProductToCartDto
+import com.example.miproyecto.data.dto.CartResponseDto
+import com.example.miproyecto.data.dto.CategoryDto
+import com.example.miproyecto.data.dto.LoginRequestDto
+import com.example.miproyecto.data.dto.LoginResponseDto
+import com.example.miproyecto.data.dto.ProductDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface ApiService {
 
-    @POST("login")
-    suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
+    // Auth
+    @POST("auth/login")
+    suspend fun login(@Body request: LoginRequestDto): LoginResponseDto
 
-    @GET("product")
-    suspend fun getProducts(
-        @Header("Authorization") token: String,
-        @Query("page") page: Int,
-        @Query("category") category: String
-    ): Response<List<Product>>
+    @POST("auth/refresh")
+    suspend fun refresh(@Body request: Any): Any
 
+    // Products
+    @GET("products")
+    suspend fun getProducts(): List<ProductDto>
+
+    @GET("products/{id}")
+    suspend fun getProduct(@Path("id") id: Long): ProductDto
+
+    // Categories
+    @GET("categories")
+    suspend fun getCategories(): List<CategoryDto>
+
+    @GET("categories/{id}/products")
+    suspend fun getProductsByCategory(@Path("id") id: Long): List<ProductDto>
+
+    // Cart
     @GET("cart")
-    suspend fun getCart(
-        @Header("Authorization") token: String
-    ): Response<List<CartItem>>
+    suspend fun getCart(): CartResponseDto
 
-    @POST("cart/add")
-    suspend fun addToCart(
-        @Header("Authorization") token: String,
-        @Body request: AddCartRequest): Response<GenericResponse>
+    @POST("cart")
+    suspend fun addToCart(@Body dto: AddProductToCartDto): CartResponseDto
 
-    @DELETE("cart/remove/{id}")
-    suspend fun removeFromCart(
-        @Header("Authorization") token: String,
-        @Path("id") id: Long): Response<GenericResponse>
+    @DELETE("cart/{productId}")
+    suspend fun removeFromCart(@Path("productId") id: Long): CartResponseDto
+
+    @DELETE("cart")
+    suspend fun clearCart(): CartResponseDto
 }
