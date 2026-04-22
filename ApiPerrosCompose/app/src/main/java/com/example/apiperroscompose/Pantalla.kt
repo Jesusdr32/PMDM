@@ -80,7 +80,7 @@ fun listaPerros(navController: NavController) {
 }
 
 @Composable
-fun detallePerro(raza: String, navController: NavController) {
+fun detallePerro(raza: String, subraza: String? = null, navController: NavController) {
     val myViewModel: ListaPerrosViewModel = viewModel()
     myViewModel.cargarDetallePerro(raza)
     val perro = myViewModel.detallePerro.collectAsState().value
@@ -118,10 +118,7 @@ fun detallePerro(raza: String, navController: NavController) {
                     AsyncImage(
                         model = foto,
                         contentDescription = "Foto de perro $raza",
-                        modifier = Modifier.size(120.dp),
-                        placeholder = painterResource(id = R.drawable.loading),
-                        error = painterResource(id = R.drawable.image_not_found),
-                        fallback = painterResource(id = R.drawable.image_not_found)
+                        modifier = Modifier.size(180.dp)
                     )
                 }
             }

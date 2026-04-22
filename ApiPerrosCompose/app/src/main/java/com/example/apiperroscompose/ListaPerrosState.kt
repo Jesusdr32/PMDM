@@ -15,13 +15,17 @@ class ListaPerrosState {
         }
     }
 
-    suspend fun recuperarFotos(raza: String): DogRespuesta = withContext(Dispatchers.IO) {
-        val respuesta = retrofitApi.retrofitService.getFotosPerros(raza)
+    suspend fun recuperarFotos(raza: String, subraza: String? = null): DogRespuesta = withContext(Dispatchers.IO) {
+        val respuesta = if (subraza.isNullOrEmpty()) {
+            retrofitApi.retrofitService.getFotosPerros(raza)
+        } else {
+            retrofitApi.retrofitService.getFotosSubraza(raza, subraza)
+        }
 
         if (respuesta.isSuccessful) {
             respuesta.body() ?: DogRespuesta("error", emptyList())
         } else {
-            DogRespuesta("error", null)
+            DogRespuesta("error", emptyList())
         }
     }
 

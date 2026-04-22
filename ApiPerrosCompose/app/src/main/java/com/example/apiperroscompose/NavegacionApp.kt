@@ -12,7 +12,12 @@ fun navegacion() {
         composable("Pantalla inicial") {listaPerros(miNavController)}
         composable("Detalle perro/{raza}") {
             val raza = it.arguments?.getString("raza") ?: ""
-            detallePerro(raza, miNavController)
+            detallePerro(raza, null, miNavController)
+        }
+        composable("Detalle perro/{raza}/{subraza}") {
+            val raza = it.arguments?.getString("raza") ?: ""
+            val subraza = it.arguments?.getString("subraza")
+            detallePerro(raza, subraza, miNavController)
         }
     }
 }

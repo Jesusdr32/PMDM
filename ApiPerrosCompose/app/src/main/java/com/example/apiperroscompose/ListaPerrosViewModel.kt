@@ -25,9 +25,9 @@ class ListaPerrosViewModel: ViewModel() {
         cargarRazas()
     }
 
-    fun cargarDetallePerro(raza: String) {
+    fun cargarDetallePerro(raza: String, subraza: String? = null) {
         viewModelScope.launch {
-            _detallePerro.value = myState.recuperarFotos(raza)
+            _detallePerro.value = myState.recuperarFotos(raza, subraza)
         }
     }
 }
