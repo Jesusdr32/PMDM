@@ -1,40 +1,27 @@
 package com.example.miproyecto.ui.login
 
-import android.content.Intent
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.example.miproyecto.domain.SessionManager
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
-class LoginScreen: AppCompatActivity() {
-    private lateinit var binding: ActivityLoginBinding
-    private val viewModel: LoginViewModel by viewModels()
-    private lateinit var sessionManager: SessionManager
+@Composable
+fun LoginScreen(nav: NavController, vm: LoginViewModel = viewModel()) {
+    Column {
+        TextField(vm.username, { vm.username = it }, label = { Text("Usuario") })
+        TextField(vm.password, { vm.password = it }, label = { Text("Contraseña") })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        sessionManager = SessionManager(this)
-
-        binding.btnLogin.setOnClickListener {
-            val email = binding.getEmail.text.toString()
-            val password = binding.getPassword.text.toString()
-
-            viewModel.login(email, password)
+        Button(onClick = {
+            vm.login {
+                nav.navigate("main")
+            }
+        }) {
+            Text("Login")
         }
 
-        viewModel.loginResult.observe(this) {
-            sessionManager.saveToken("Bearer ${it.token}")
-            sessionManager.saveUsername(it.username)
-
-            startActivity(Intent(this, MainScreen::class.java))
-            finish()
-        }
-
-        viewModel.error.observe(this) {
-            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-        }
+        vm.error?.let { Text(it) }
     }
 }

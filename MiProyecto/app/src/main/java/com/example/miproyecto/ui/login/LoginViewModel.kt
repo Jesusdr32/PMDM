@@ -13,19 +13,27 @@ import kotlinx.coroutines.launch
 class LoginViewModel: ViewModel() {
     var username by mutableStateOf("")
     var password by mutableStateOf("")
+    var loading by mutableStateOf(false)
+    var error by mutableStateOf<String?>(null)
 
     private val repo = AuthRepository()
 
     fun login(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            val response = repo.login(
-                LoginRequestDto(username, password)
-            )
+            try {
+                loading = true
 
-            SessionManager.token = response.accessToken
-            SessionManager.username = username
+                val res = repo.login(LoginRequestDto(username, password))
 
-            onSuccess()
+                SessionManager.token = res.accessToken
+                SessionManager.username = username
+
+                onSuccess()
+            } catch (e: Exception) {
+                error = "Login error"
+            } finally {
+                loading = false
+            }
         }
     }
 }

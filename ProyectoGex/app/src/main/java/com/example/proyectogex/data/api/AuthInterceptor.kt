@@ -1,6 +1,6 @@
-package com.example.miproyecto.data.api
+package com.example.proyectogex.data.api
 
-import com.example.miproyecto.domain.SessionManager
+import com.example.proyectogex.domain.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
 
