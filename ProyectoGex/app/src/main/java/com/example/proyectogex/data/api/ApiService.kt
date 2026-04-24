@@ -19,6 +19,12 @@ interface ApiService {
     @GET("products")
     suspend fun getProducts(): List<ProductDto>
 
+    @GET("products/{productId}")
+    suspend fun getProductById(@Path("productId") productId: Long): ProductDto
+
+    @GET("categories/{categoryId}/products")
+    suspend fun getProductsByCategory(@Path("categoryId") categoryId: Long): List<ProductDto>
+
     @GET("categories")
     suspend fun getCategories(): List<CategoryDto>
 
@@ -28,6 +34,10 @@ interface ApiService {
     @POST("cart")
     suspend fun addToCart(@Body body: AddCartDto): CartResponseDto
 
-    @DELETE("cart/{id}")
-    suspend fun deleteFromCart(@Path("id") id: Long): CartResponseDto
+    @DELETE("cart/{productId}")
+    suspend fun deleteFromCart(@Path("productId") productId: Long): CartResponseDto
+
+    @DELETE("cart")
+    suspend fun clearCart(): CartResponseDto
+
 }

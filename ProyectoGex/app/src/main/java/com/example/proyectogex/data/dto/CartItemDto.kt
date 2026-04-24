@@ -1,7 +1,10 @@
 package com.example.proyectogex.data.dto
 
 data class CartItemDto(
-    val id: Long,
-    val product: ProductDto,
-    val units: Int
+    val productName: String,
+    val unitPrice: Double,
+    val discount: Int,
+    val discounntedPrice: Double,
+    val units: Int,
+    val totalPrice: Double
 )
