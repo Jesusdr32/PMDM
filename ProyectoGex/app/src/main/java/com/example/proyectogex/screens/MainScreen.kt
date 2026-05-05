@@ -1,6 +1,9 @@
 package com.example.proyectogex.screens
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,45 +13,97 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectogex.navigation.Routes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.example.proyectogex.domain.SessionManager
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    val navController = rememberNavController()
+    val innerNavController = rememberNavController()
 
     Scaffold(
+        topBar = {
+            TopBar(navController)
+        },
+
         bottomBar = {
-            BottomBar(navController)
+            BottomBar(innerNavController)
         }
+
     ) { padding ->
         NavHost(
-            navController = navController,
+            navController = innerNavController,
             startDestination = Routes.HOME,
             modifier = Modifier.padding(padding)
         ) {
             composable(Routes.HOME) {
-//                HomeScreen()
+                HomeScreen()
             }
 
             composable(Routes.PRODUCTS) {
-//                ProductsScreen(
-//                    onProductClick = { productId ->
-//                        //  abrir detalle o añadir al carrito
-//                    }
-//                )
+                ProductsScreen()
             }
 
             composable(Routes.CART) {
-//                CartScreen()
+                CartScreen()
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(navController: NavHostController) {
+    val username = SessionManager.username ?: "Invitado"
+
+    TopAppBar(
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Usuario"
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = username,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    SessionManager.token = null
+                    SessionManager.username = null
+
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Cerrar sesión"
+                )
+            }
+        }
+    )
 }
 
 @Composable

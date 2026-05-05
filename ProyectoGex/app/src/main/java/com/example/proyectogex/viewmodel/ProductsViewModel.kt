@@ -10,14 +10,11 @@ class ProductsViewModel : ViewModel() {
     private val state = ProductState(ProductRepository())
 
     val isLoading get() = state.isLoading
-
     val errorMessage get() = state.errorMessage
-
     val products get() = state.products
-
     val selectedProduct get() = state.selectedProduct
-
     val selectedCategoryId get() = state.selectedCategoryId
+    val canLoadMore get() = state.canLoadMore
 
     fun loadAllProducts() {
         viewModelScope.launch {
@@ -35,5 +32,9 @@ class ProductsViewModel : ViewModel() {
         viewModelScope.launch {
             state.filterByCategory(categoryId)
         }
+    }
+
+    fun loadNextPage() {
+        state.loadNextPage()
     }
 }

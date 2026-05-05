@@ -13,10 +13,20 @@ class ProductState(private val productRepository: ProductRepository) {
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
+    var allProducts: List<ProductDto> = emptyList()
+        private set
+
     var products by mutableStateOf<List<ProductDto>>(emptyList())
         private set
 
+    private var page = 0
+    private val pageSize = 3
+
+    var canLoadMore by mutableStateOf(true)
+        private set
+
     var selectedProduct by mutableStateOf<ProductDto?>(null)
+        private set
 
     var selectedCategoryId by mutableStateOf<Long?>(null)
         private set
@@ -26,7 +36,11 @@ class ProductState(private val productRepository: ProductRepository) {
         errorMessage = null
 
         try {
-            products = productRepository.getAllProducts()
+            allProducts = productRepository.getAllProducts()
+
+            resetPagination()
+
+            loadNextPage()
         } catch (e: Exception) {
             errorMessage = e.message ?: "Error cargando productos"
         } finally {
@@ -53,11 +67,42 @@ class ProductState(private val productRepository: ProductRepository) {
         selectedCategoryId = categoryId
 
         try {
-            products = productRepository.getProductsByCategory(categoryId)
+            allProducts = productRepository.getProductsByCategory(categoryId)
+
+            resetPagination()
+
+            loadNextPage()
         } catch (e : Exception) {
             errorMessage = e.message ?: "Error filtrando productos por categoría"
         } finally {
             isLoading = false
         }
+    }
+
+    fun loadNextPage() {
+        if (!canLoadMore) return
+
+        val start = page * pageSize
+        val end = (start + pageSize).coerceAtMost(allProducts.size)
+
+        if (start >= allProducts.size) {
+            canLoadMore = false
+            return
+        }
+
+        val nextItems = allProducts.subList(start, end)
+
+        products = products + nextItems
+        page++
+
+        if (end >= allProducts.size) {
+            canLoadMore = false
+        }
+    }
+
+    private fun resetPagination() {
+        products = emptyList()
+        page = 0
+        canLoadMore = true
     }
 }

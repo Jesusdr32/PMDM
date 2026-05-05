@@ -24,18 +24,21 @@ class CartViewModel : ViewModel() {
     fun addProduct(productId: Long, units: Int) {
         viewModelScope.launch {
             state.addProduct(productId, units)
+            loadCart()
         }
     }
 
     fun removeProduct(productId: Long) {
         viewModelScope.launch {
             state.removeProduct(productId)
+            loadCart()
         }
     }
 
     fun clearCart() {
         viewModelScope.launch {
             state.clearCart()
+            loadCart()
         }
     }
 }
