@@ -14,7 +14,6 @@ class ProductsViewModel : ViewModel() {
     val products get() = state.products
     val selectedProduct get() = state.selectedProduct
     val selectedCategoryId get() = state.selectedCategoryId
-    val canLoadMore get() = state.canLoadMore
 
     fun loadAllProducts() {
         viewModelScope.launch {
@@ -31,12 +30,6 @@ class ProductsViewModel : ViewModel() {
     fun loadProductsByCategory(categoryId: Long) {
         viewModelScope.launch {
             state.filterByCategory(categoryId)
-        }
-    }
-
-    fun loadNextPage() {
-        viewModelScope.launch {
-            state.loadNextPage()
         }
     }
 }
