@@ -35,6 +35,8 @@ class ProductsViewModel : ViewModel() {
     }
 
     fun loadNextPage() {
-        state.loadNextPage()
+        viewModelScope.launch {
+            state.loadNextPage()
+        }
     }
 }

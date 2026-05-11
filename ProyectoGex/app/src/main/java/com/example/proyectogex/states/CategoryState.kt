@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.proyectogex.data.dto.CategoryDto
 import com.example.proyectogex.data.repository.CategoryRepository
+import com.example.proyectogex.utils.NetworkErrorHandler
 
 class CategoryState(private val categoryRepository: CategoryRepository) {
     var isLoading by mutableStateOf(false)
@@ -23,7 +24,7 @@ class CategoryState(private val categoryRepository: CategoryRepository) {
         try {
             categories = categoryRepository.getCategories()
         } catch (e: Exception) {
-            errorMessage = e.message ?: "Error cargando categorías"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }

@@ -11,19 +11,27 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("auth/login")
     suspend fun login(@Body body: LoginRequestDto): LoginResponseDto
 
     @GET("products")
-    suspend fun getProducts(): List<ProductDto>
+    suspend fun getProducts(
+        @Query("page") page: Int? = null,
+        @Query("size") size: Int? = null
+    ): List<ProductDto>
 
     @GET("products/{productId}")
     suspend fun getProductById(@Path("productId") productId: Long): ProductDto
 
     @GET("categories/{categoryId}/products")
-    suspend fun getProductsByCategory(@Path("categoryId") categoryId: Long): List<ProductDto>
+    suspend fun getProductsByCategory(
+        @Path("categoryId") categoryId: Long,
+        @Query("page") page: Int? = null,
+        @Query("size") size: Int? = null
+    ): List<ProductDto>
 
     @GET("categories")
     suspend fun getCategories(): List<CategoryDto>

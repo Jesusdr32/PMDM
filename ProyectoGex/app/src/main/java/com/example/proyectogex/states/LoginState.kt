@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.proyectogex.data.repository.AuthRepository
 import com.example.proyectogex.domain.SessionManager
+import com.example.proyectogex.utils.NetworkErrorHandler
 
 class LoginState(private val authRepository: AuthRepository) {
     var isLoading by mutableStateOf(false)
@@ -29,7 +30,7 @@ class LoginState(private val authRepository: AuthRepository) {
                 loginSuccess = true
             }
         } catch (e: Exception) {
-            errorMessage = e.message ?: "Usuario o contraseña incorrectos"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }

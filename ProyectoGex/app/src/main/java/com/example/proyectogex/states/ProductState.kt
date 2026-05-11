@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.proyectogex.data.dto.ProductDto
 import com.example.proyectogex.data.repository.ProductRepository
+import com.example.proyectogex.utils.NetworkErrorHandler
+import kotlinx.coroutines.delay
 
 class ProductState(private val productRepository: ProductRepository) {
     var isLoading by mutableStateOf(false)
@@ -13,8 +15,7 @@ class ProductState(private val productRepository: ProductRepository) {
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
-    var allProducts: List<ProductDto> = emptyList()
-        private set
+    private var allProducts: List<ProductDto> = emptyList()
 
     var products by mutableStateOf<List<ProductDto>>(emptyList())
         private set
@@ -22,7 +23,7 @@ class ProductState(private val productRepository: ProductRepository) {
     private var page = 0
     private val pageSize = 3
 
-    var canLoadMore by mutableStateOf(true)
+    var canLoadMore by mutableStateOf(false)
         private set
 
     var selectedProduct by mutableStateOf<ProductDto?>(null)
@@ -34,15 +35,12 @@ class ProductState(private val productRepository: ProductRepository) {
     suspend fun loadAllProducts() {
         isLoading = true
         errorMessage = null
-
+        selectedCategoryId = null
         try {
             allProducts = productRepository.getAllProducts()
-
-            resetPagination()
-
-            loadNextPage()
+            resetAndLoadFirst()
         } catch (e: Exception) {
-            errorMessage = e.message ?: "Error cargando productos"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
@@ -51,11 +49,10 @@ class ProductState(private val productRepository: ProductRepository) {
     suspend fun loadProductById(productId: Long) {
         isLoading = true
         errorMessage = null
-
         try {
             selectedProduct = productRepository.getProductById(productId)
-        } catch (e : Exception) {
-            errorMessage = e.message ?: "Error cargando producto"
+        } catch (e: Exception) {
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
@@ -65,44 +62,34 @@ class ProductState(private val productRepository: ProductRepository) {
         isLoading = true
         errorMessage = null
         selectedCategoryId = categoryId
-
         try {
             allProducts = productRepository.getProductsByCategory(categoryId)
-
-            resetPagination()
-
-            loadNextPage()
-        } catch (e : Exception) {
-            errorMessage = e.message ?: "Error filtrando productos por categoría"
+            resetAndLoadFirst()
+        } catch (e: Exception) {
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
     }
 
-    fun loadNextPage() {
-        if (!canLoadMore) return
-
+    suspend fun loadNextPage() {
+        if (!canLoadMore || isLoading) return
+        isLoading = true
+        delay(400)
         val start = page * pageSize
         val end = (start + pageSize).coerceAtMost(allProducts.size)
-
-        if (start >= allProducts.size) {
-            canLoadMore = false
-            return
-        }
-
-        val nextItems = allProducts.subList(start, end)
-
-        products = products + nextItems
+        products = products + allProducts.subList(start, end)
         page++
-
-        if (end >= allProducts.size) {
-            canLoadMore = false
-        }
+        if (end >= allProducts.size) canLoadMore = false
+        isLoading = false
     }
 
-    private fun resetPagination() {
+    private fun resetAndLoadFirst() {
         products = emptyList()
         page = 0
-        canLoadMore = true
+        val end = pageSize.coerceAtMost(allProducts.size)
+        products = allProducts.subList(0, end)
+        page = 1
+        canLoadMore = allProducts.size > pageSize
     }
 }

@@ -8,9 +8,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.proyectogex.navigation.Routes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -54,7 +56,18 @@ fun MainScreen(navController: NavHostController) {
             }
 
             composable(Routes.PRODUCTS) {
-                ProductsScreen()
+                ProductsScreen(navController = innerNavController)
+            }
+
+            composable(
+                route = Routes.PRODUCT_DETAIL,
+                arguments = listOf(navArgument("productId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val productId = backStackEntry.arguments?.getLong("productId") ?: 0L
+                ProductDetailScreen(
+                    productId = productId,
+                    navController = innerNavController
+                )
             }
 
             composable(Routes.CART) {
@@ -93,7 +106,8 @@ fun TopBar(navController: NavHostController) {
                     SessionManager.username = null
 
                     navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
+                        popUpTo(Routes.MAIN) { inclusive = true }
+                        launchSingleTop = true
                     }
                 }
             ) {

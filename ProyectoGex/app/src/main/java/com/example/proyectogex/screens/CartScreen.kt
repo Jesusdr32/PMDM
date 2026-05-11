@@ -55,8 +55,8 @@ fun CartScreen(
                 CircularProgressIndicator()
             }
             return@Column
-
         }
+
         if (cart?.products.isNullOrEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),

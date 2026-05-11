@@ -49,7 +49,7 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Mi tienda",
+            text = "GEX",
             style = MaterialTheme.typography.headlineMedium
         )
 

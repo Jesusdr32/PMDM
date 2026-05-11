@@ -16,9 +16,4 @@ class AuthRepository(private val api: ApiService = RetrofitClient.api) {
 
         return response.accessToken
     }
-
-    fun logout() {
-        SessionManager.token = null
-        SessionManager.username = null
-    }
 }

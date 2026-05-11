@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import com.example.proyectogex.data.dto.CartItemDto
 import com.example.proyectogex.data.dto.CartResponseDto
 import com.example.proyectogex.data.repository.CartRepository
+import com.example.proyectogex.utils.NetworkErrorHandler
 
 class CartState(private val cartRepository: CartRepository) {
     var isLoading by mutableStateOf(false)
@@ -26,7 +27,7 @@ class CartState(private val cartRepository: CartRepository) {
             updateState(response)
 
         } catch (e : Exception) {
-            errorMessage = e.message ?: "Error cargando carrito"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
@@ -41,7 +42,7 @@ class CartState(private val cartRepository: CartRepository) {
             updateState(response)
 
         } catch (e : Exception) {
-            errorMessage = e.message ?: "Error añadiendo producto"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
@@ -56,7 +57,7 @@ class CartState(private val cartRepository: CartRepository) {
             updateState(response)
 
         } catch (e : Exception) {
-            errorMessage = e.message ?: "Error eliminando producto"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
@@ -71,7 +72,7 @@ class CartState(private val cartRepository: CartRepository) {
             updateState(response)
 
         } catch (e : Exception) {
-            errorMessage = e.message ?: "Error vaciando carrito"
+            errorMessage = NetworkErrorHandler.getMessage(e)
         } finally {
             isLoading = false
         }
